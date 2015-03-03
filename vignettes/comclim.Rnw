@@ -1,0 +1,172 @@
+%\VignetteIndexEntry{Using comclim}
+\documentclass{article}
+\usepackage[left=2.5cm,top=3cm,right=2.5cm,bottom=3cm]{geometry}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{Getting started with \texttt{comclim}}
+\author{Benjamin Blonder}
+\maketitle
+
+\section{Introduction}
+This document provides a narrated example of how to use the \texttt{comclim} package. I show how to merge climate niche data and species composition data into the format required by the framework, then, how to run analyses and interpret results. For demonstration purposes, I use simulated data for species' composition and climate niches.
+
+\section{Preparing input}
+\subsection{Climate niche data}
+First, I prepare a dataframe of climate niches for all species in the analysis at time $t_1$. To do this, I begin by loading  in the community climate package.
+<<>>=
+library(comclim)
+@
+
+Next, I generate an object called \texttt{climateniches} which describes three-dimensional climate niches of 100 species, approximated by 50 observations each. In a real-world analysis, you would instead fill this dataframe with realized climate niches for each species based on experiments or from observational data. For example, this could be done using georeferenced observations transformed into climate space using the \texttt{extract} command in \texttt{library(raster)}. The important thing is that the dataframe has one column named \texttt{taxon} that can be used for matching species lists. The other columns, with arbitrary names, are assumed to be the climate data.
+
+<<>>=
+num_climateaxes = 3
+num_regionalpool = 100
+num_occurrences = 50
+
+climateniches <- NULL
+for (i in 1:num_regionalpool)
+{
+  randdata = NULL
+	for (j in 1:num_climateaxes)
+	{
+		meanpos = runif(num_climateaxes,min=2,max=4)
+		tcol = rnorm(num_occurrences, mean=meanpos[j]
+            + runif(n=1,min=-2,max=2), sd=runif(1, 0.2,0.4))
+		randdata <- cbind(randdata, tcol)
+	}
+	
+	randdata <- as.data.frame(randdata)
+	
+	names(randdata) <- paste("ClimateAxis", 1:num_climateaxes, sep='')
+	randdata$taxon = paste("Species", i, collapse='')
+	
+	climateniches <- rbind(climateniches, randdata)
+}
+climateniches$taxon <- factor(climateniches$taxon)
+@
+
+In a real analysis it is important that the climate axes are on comparable scales, because the community climate statistics are calculated using Euclidean distances. One way to ensure this requirement is met is to rescale all climate variables by z-transformation:
+
+<<>>=
+climateniches[,1:num_climateaxes] <- 
+    scale(climateniches[,1:num_climateaxes], center=TRUE, scale=TRUE)
+@
+
+The final climate niche dataframe is now ready.
+
+<<>>=
+print(str(climateniches))
+@
+
+\subsection{Local community}
+The next step is to define the local community to be analyzed at time $t_1$. Here I take a subset of five species, intentionally choosing those with centroid positions that are closest to the value 1 along each axis. In a real study, the \texttt{localcommunity} object would simply be a list of species names  that is a subset of those in \texttt{levels(climateniches\$taxon)}.
+
+<<>>=
+num_community = 5
+
+nichedist <- do.call("rbind",by(
+  climateniches[,1:num_climateaxes], 
+  climateniches$taxon, function(x) { 
+      cm <- colMeans(x)
+      cm <- cm- rep(1, num_climateaxes); 
+      return(data.frame(pos=sqrt(sum(cm^2))))
+    }
+  ))
+
+# select for species on the lower edge of the climate space
+whichsp <- order(nichedist,decreasing=FALSE)[1:num_community]
+localcommunity <- row.names(nichedist)[whichsp]
+print(localcommunity)
+@
+
+\subsection{Regional pool}
+Like the local community, the regional pool list (\texttt{regionalpool}) is simply a vector of species names that exist at time $t_1$. In a real analysis, you would generate this vector based on some prior knowledge of your system. In this case, we assume that it is equivalent to all the species for which we have already generated climate niches:
+
+<<>>=
+regionalpool <- as.character(levels(climateniches$taxon))
+print(regionalpool)
+@
+
+\subsection{Defining the observed climate}
+The next input is the observed climate at time $t_2$. Here I choose a vector with all axes set to $-1$, to simulate an `extreme' climate.  In a real study, you could obtain this vector from observations or gridded climate data. 
+<<>>=
+observedclimate <- rep(-1, num_climateaxes)
+names(observedclimate) <- paste("ClimateAxis", 1:num_climateaxes, sep='')
+print(observedclimate)
+@
+
+\subsection{Putting it all together}
+The final step is to merge all of these data into a \texttt{CommunityClimateInput} object. The package provides a helper function. 
+
+<<>>=
+cci <- inputcommunitydata(
+  	localcommunity = localcommunity, 
+		regionalpool = regionalpool, 
+		climateniches = climateniches, 
+		observedclimate = observedclimate)
+
+summary(cci)
+@
+
+It is also possible to visualize the regional pool and local community in climate space.
+
+\begin{center}
+<<label=figure1,fig=TRUE,echo=TRUE>>=
+plot(cci,cex.community=0.75)
+@
+\end{center}
+
+Above you see the species in the community plotted with large symbols, and all the species in the regional pool plotted with small symbols. By construction, the local community is at the `edge' of the climate space encompassed by the regional pool.
+
+\section{Running a community climate analysis}
+Now that the data are in the correct format, running an analysis is simple. I only have to specify the climate axes to be used (in this case, all of them). In a real analysis you might choose only a subset of axes, or specify larger values for the number of replicates (e.g. \texttt{numreplicates = 1000} instead of \texttt{100}), etc.
+
+<<>>=
+result_community <- communityclimate(cci,
+  climateaxes=c("ClimateAxis1","ClimateAxis2","ClimateAxis3"),
+  numreplicates=100, verbose=F)
+@
+
+\section{Interpreting and visualizing the results}
+By construction, the example defined a community whose volume was smaller than the regional pool's, and whose inferred climate was much further away from the observed climate than the regional pool's. As a result, I should expect to find $\delta(t_1) < 0$ and $\lambda(t_1,t_2)>0$. The actual results can be seen from the output object:
+
+<<>>=
+summary(result_community)
+@
+
+Looking at the deviations, \texttt{result\_community\$deviation\_volumeMagnitude} (i.e. $\delta(t_1)$) is significantly smaller than zero, as predicted. Similarly, \texttt{result\_community\$deviation\_mismatchMagnitude} (i.e. $\lambda(t_1,t_2)>0$) is significantly greater than zero, as expected.
+
+To visualize these inferences, it is also possible to plot a community climate diagram.
+
+\begin{center}
+<<label=figure2,fig=TRUE,echo=TRUE>>=
+plot(result_community)
+@
+\end{center}
+
+Here I can confirm that the community has smaller climate volume (red circle vs gray circles) and larger climate mismatch (red vector vs gray vectors) than expected. The community climate deviations are summarized as the figure's title.
+
+It is also possible to directly plot the null and observed values for each community climate statisic, along with projections of the mismatch vector along each climate axis. The gray lines show the kernel-smoothed null distribution along with the 25\% and 75\% quantiles, and the red line shows the observed value. 
+
+\begin{center}
+<<label=figure3,fig=TRUE,echo=TRUE>>=
+plot(result_community, deviations=TRUE)
+@
+\end{center}
+
+Based on all of these results, I would infer that the community is structured by environmental filtering and also by environmental disequilibrium.
+
+\section{Summary}
+In short, the necessary steps to using the \texttt{comclim} package on your own data are:
+\begin{enumerate}
+\item{Obtain climate niche data for all species and transform it to standardized axes}
+\item{Use \texttt{inputcommunitydata} to merge all input data}
+\item{Run \texttt{communityclimate} to calculate community climate statistics}
+\item{Analyze or plot the resulting deviations}
+\end{enumerate}
+
+That's all!
+
+\end{document}

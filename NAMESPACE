@@ -1,0 +1,7 @@
+export("summary.CommunityClimateInput","summary.CommunityClimateStatistics","plot.CommunityClimateInput","plot.CommunityClimateStatistics","inputcommunitydata","generatedemodata","communityclimate","climatestatistics","climatedeviations")
+exportClasses(
+    "CommunityClimateInput",
+     "CommunityClimateStatistics" 
+)
+
+import(methods)

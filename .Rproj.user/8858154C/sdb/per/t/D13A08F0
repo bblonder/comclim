@@ -1,0 +1,16 @@
+{
+    "contents" : "\\name{plot.CommunityClimateInput}\n\\alias{plot.CommunityClimateInput}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nPairs plot of species and regional pool in climate space\n}\n\\description{\nProduces a pairs plot representing a multidimensional climate space. The species in the community are drawn in a contrasting fashion to the species in the regional pool.\n}\n\\usage{\n\\method{plot}{CommunityClimateInput}(x, climateaxes = NULL, axisnames = NULL, \n  cex.community = 0.5, cex.pool = 0.25, \n  pch.community = 16, pch.pool = 16, \n  colors = \"rainbow\", ...)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{x}{\nA \\code{CommunityClimateInput} object to be plotted.\n}\n  \\item{climateaxes}{\nA vector of climate axes to be plotted, usually a subset of the axes in \\code{object}. If empty, defaults to all axes.\n}\n  \\item{axisnames}{\nLabel text for the climate axes.\n}\n  \\item{cex.community}{\nExpansion factor for the local community's species.\n}\n  \\item{cex.pool}{\nExpansion factor for the regional pool's species.\n}\n  \\item{pch.community}{\nPlotting symbol for the local community's species.\n}\n  \\item{pch.pool}{\nPlotting symbol for the regional pool's species.\n}\n  \\item{colors}{\nThe name of a function used to give a color each species.\n}\n\\item{...}{Other arguments to be passed to plot commands}\n}\n\\value{\nNone. Used for the side-effect of producing a plot.\n}\n\\examples{\ncommunity_richness_5 <- generatedemodata()\n\nplot(community_richness_5)\n}",
+    "created" : 1411113243934.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "607785229",
+    "id" : "D13A08F0",
+    "lastKnownWriteTime" : 1381854136,
+    "path" : "~/Documents/Denmark/bien projects/community assembly/comclim/comclim/man/plot.CommunityClimateInput.Rd",
+    "project_path" : "man/plot.CommunityClimateInput.Rd",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_doc"
+}

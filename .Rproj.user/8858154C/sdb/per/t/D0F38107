@@ -1,0 +1,16 @@
+{
+    "contents" : "\\name{plot.CommunityClimateStatistics}\n\\alias{plot.CommunityClimateStatistics}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nDraws community climate diagram.\n}\n\\description{\nProduces either a deviations plot or a community climate diagram. The deviations plot compares null distributions (black) and observed values (red) for volume, mismatch, and mismatch along each axis, along with the interquartile range of null values. The community climate diagram shows the location of the community (red points) and null communities (black points) in climate space at tinf, and compares it to the observed climate at tobs (open black point). The climate volume for each is shown as a circle, and the climate mismatch is shown as a vector connecting the inferred climate at tinf to the observed climate at tobs.\n}\n\\usage{\n\\method{plot}{CommunityClimateStatistics}(x, deviations = FALSE, axisnames = NULL, \n  nnull = 10, cex.axis = 0.7, cex.nullpoints = 0.3, \n  cex.obspoints = 0.5, cex.names = 1.5, ...)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{x}{\nA CommunityClimateStatistics object to be plotted\n}\n  \\item{deviations}{\nIf TRUE, produces a deviations plot; if FALSE, produces a community climate diagram. All subsequent options are applicable only when deviations=FALSE.\n}\n  \\item{axisnames}{\nLabels to be drawn for each climate axis.\n}\n  \\item{nnull}{\nNumber of null simulations to be drawn on the diagram; lower values may produce clearer plots.\n}\n  \\item{cex.axis}{\nExpansion factor for the axis ticks.\n}\n  \\item{cex.nullpoints}{\nExpansion factor for the null points.\n}\n  \\item{cex.obspoints}{\nExpansion factor for the observed points.\n}\n  \\item{cex.names}{\nExpansion factor for the climate axis labels.\n}\n\\item{...}{Other arguments to be passed to plot commands}\n}\n\n\\value{\nNone; used for the side-effect of producing a plot.\n}\n\\examples{\n# (uncomment next six lines - not run for CRAN speed)\n\n# community_richness_5 <- generatedemodata()\n# result_community <- communityclimate(community_richness_5,\n#  climateaxes=c(\"ClimateAxis1\",\"ClimateAxis2\",\"ClimateAxis3\"),\n#\t numreplicates=25)\n\n# plot(result_community,deviations=TRUE)   # deviations plot\n# plot(result_community,deviations=FALSE)  # community climate diagram\n}\n",
+    "created" : 1411113248037.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "206817256",
+    "id" : "D0F38107",
+    "lastKnownWriteTime" : 1411113278,
+    "path" : "~/Documents/Denmark/bien projects/community assembly/comclim/comclim/man/plot.CommunityClimateStatistics.Rd",
+    "project_path" : "man/plot.CommunityClimateStatistics.Rd",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_doc"
+}
