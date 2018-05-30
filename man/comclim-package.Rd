@@ -8,16 +8,6 @@ Community climate analysis
 \description{
 Computes community climate statistics for volume and mismatch using species' climate niches either unscaled or scaled relative to a regional species pool. These statistics can be used to describe biogeographic patterns and infer community assembly processes.
 }
-\details{
-\tabular{ll}{
-Package: \tab comclim\cr
-Type: \tab Package\cr
-Version: \tab 0.9.4\cr
-Date: \tab 2014-18-9\cr
-License: \tab GPL-3\cr
-Depends: \tab methods\cr
-}
-}
 \author{
 Benjamin Blonder <bblonder@gmail.com>
 }
