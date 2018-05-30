@@ -4,4 +4,19 @@ exportClasses(
      "CommunityClimateStatistics" 
 )
 
+
+
 import(methods)
+
+importFrom("grDevices", "gray", "rgb")
+importFrom("graphics", "abline", "axis", "box", "legend", "lines",
+"pairs", "par", "plot", "points", "rect", "segments",
+"text", "title")
+importFrom("stats", "complete.cases", "density", "median", "na.omit",
+"quantile", "rnorm", "runif")
+importFrom("utils", "str")
+
+S3method(summary, CommunityClimateInput)
+S3method(summary, CommunityClimateStatistics)
+S3method(plot, CommunityClimateInput)
+S3method(plot, CommunityClimateStatistics)
