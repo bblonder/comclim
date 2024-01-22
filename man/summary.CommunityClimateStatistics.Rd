@@ -11,9 +11,9 @@ Summarizes community climate statistics
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+The object to be summarized
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Other arguments to be passed
 }
 }
