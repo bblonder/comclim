@@ -1,8 +1,13 @@
 Package: comclim
 Type: Package
 Title: Community Climate Statistics
+<<<<<<< HEAD
 Version: 0.9.6
 Date: 2024-01-22
+=======
+Version: 0.9.5
+Date: 2018-05-30
+>>>>>>> 006d8430e282886f59e5807a093be07648b08783
 Author: Benjamin Blonder
 Maintainer: Benjamin Blonder <benjamin.blonder@berkeley.edu>
 Description: Computes community climate statistics for volume and mismatch using species' climate niches either unscaled or scaled relative to a regional species pool. These statistics can be used to describe biogeographic patterns and infer community assembly processes. Includes a vignette outlining usage.
